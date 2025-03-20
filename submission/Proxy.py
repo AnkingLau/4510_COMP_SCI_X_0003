@@ -5,7 +5,7 @@ import argparse
 import re
 
 BUFFER_SIZE = 1000000
-
+# Get the IP address and Port number to use for this web proxy server
 # Argument parser for command-line inputs
 parser = argparse.ArgumentParser()
 parser.add_argument('hostname', help='The IP Address of the Proxy Server')
@@ -15,9 +15,11 @@ proxyHost = args.hostname
 proxyPort = args.port
 
 # Create a server socket with error handling
+# ~~~~ INSERT CODE ~~~~
 try:
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+ # ~~~~ END CODE INSERT ~~~~
     print('Socket created successfully')
 except socket.error as e:
     print('Failed to create socket:', e)
@@ -25,8 +27,10 @@ except socket.error as e:
 
 # Bind the server socket to a host and port
 try:
+# ~~~~ INSERT CODE ~~~~
     serverSocket.bind((proxyHost, proxyPort))
     print(f'Port {proxyPort} is bound successfully')
+# ~~~~ END CODE INSERT ~~~~
 except socket.error as e:
     print('Port is already in use:', e)
     sys.exit(1)
