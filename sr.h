@@ -6,21 +6,23 @@
  * Description: Function declarations for Selective Repeat sender and receiver
  */
 
- #ifndef SR_H
- #define SR_H
+#ifndef SR_H
+#define SR_H
 
- 
- // Function declarations for Selective Repeat sender and receiver
- 
- // Sender side (A)
- void A_init(void);        // 2025-05-01: Initialize sender variables
- void A_output(struct msg message); //  Send packet if window allows
- void A_input(struct pkt packet);   //  Handle received ACK
- void A_timerinterrupt(void);       //  Handle timeout and retransmit
- 
- // Receiver side (B)
- void B_init(void);        //  Initialize receiver variables
- void B_input(struct pkt packet);   // Handle received packet and send ACK
- 
- #endif // SR_H
- 
+/* Forward declarations to avoid type visibility errors */
+struct msg;
+struct pkt;
+
+/* Sender side (A) */
+void A_init(void);
+void A_output(struct msg message);
+void A_input(struct pkt packet);
+void A_timerinterrupt(void);
+
+/* Receiver side (B) */
+void B_init(void);
+void B_input(struct pkt packet);
+void B_output(struct msg message);
+void B_timerinterrupt(void);
+
+#endif
