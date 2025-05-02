@@ -66,7 +66,7 @@
      }
  }
  
- // 2025-04-10: Handle incoming ACK at sender
+ // 2025-04-10: Handle incoming ACK at the sender
  void A_input(struct pkt packet) {
      if (!IsCorrupted(packet) && acked[packet.acknum] == false) {
          acked[packet.acknum] = true;
@@ -144,10 +144,21 @@
      tolayer3(B, ackpkt);
  }
  
- // 2025-05-01: Initialize receiver state
+ // 2 May Initialize receiver state
  void B_init(void) {
+     int i;
      expected_base = 0;
-     for (int i = 0; i < SEQSPACE; i++)
+     for (i = 0; i < SEQSPACE; i++)
          received[i] = false;
  }
+ 
+ // Empty functions to satisfy emulator link (not used in practical)
+ void B_output(struct msg message) {
+     // Not needed for unidirectional transfer
+ }
+ 
+ void B_timerinterrupt(void) {
+     // Not needed for unidirectional transfer
+ }
+ 
  
