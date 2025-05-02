@@ -8,8 +8,7 @@
 
  #ifndef SR_H
  #define SR_H
- 
- #include "emulator.h"
+
  
  // Function declarations for Selective Repeat sender and receiver
  
