@@ -9,7 +9,6 @@
 #ifndef SR_H
 #define SR_H
 
-#include "emulator.h"
 
 /* Initializes sender-side state variables (called once before simulation starts) */
 extern void A_init(void);
