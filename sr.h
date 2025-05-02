@@ -6,22 +6,39 @@
  * Description: Function declarations for Selective Repeat sender and receiver
  */
 
-#ifndef SR_H
-#define SR_H
-
-
-/* Initializes sender-side state variables (called once before simulation starts) */
-extern void A_init(void);
-extern void B_init(void);
-extern void A_input(struct pkt);
-extern void B_input(struct pkt);
-extern void A_output(struct msg);
-extern void A_timerinterrupt(void);
-
-/* Included for future extension to bidirectional communication */
-#define BIDIRECTIONAL 0       // 0 = A to B only, 1 = bidirectional
-extern void B_output(struct msg);         // Not used in unidirectional mode
-extern void B_timerinterrupt(void);       // Not used in unidirectional mode
-
-#endif /* SR_H */
+ #ifndef SR_H
+ #define SR_H
+ 
+ #include "emulator.h"  // Must include emulator.h files
+ 
+ /* Protocol parameter definition */
+ #define WINDOW_SIZE 8       // Window size
+ #define MAX_SEQ 256         // Range of serial numbers（2^8）
+ #define TIMEOUT 16.0        // time out
+ 
+ /* add SR data struct */
+ typedef struct {
+     struct pkt packet;      // data packets
+     int acked;              // confirmed（1=Confirmed）
+     double timestamp;       // Send timestamp (for timeout determination)
+ } SendBufferSlot;
+ 
+ typedef struct {
+     struct pkt packet;      // Receive cache packets
+     int received;           // Received status (1=received)
+ } RecvBufferSlot;
+ 
+ /* Function declaration (keeping the original GBN interface unchanged) */
+ void A_output(struct msg message);
+ void A_input(struct pkt packet);
+ void A_timerinterrupt(void);
+ void A_init(void);
+ void B_input(struct pkt packet);
+ void B_init(void);
+ 
+ /* Add new tool functions */
+ int compute_checksum(struct pkt packet);  // Keep the original checksum calculation
+ void send_ack(int calling_entity, int ack_seq);  // Encapsulate ACK sending
+ 
+ #endif
 
