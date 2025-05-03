@@ -1,28 +1,25 @@
 #ifndef SR_H
 #define SR_H
 
-/* 移除对emulator.h的重复包含（已在emulator.c中包含） */
-struct msg;  // 前向声明（避免重定义）
-struct pkt;  // 前向声明
+/* 基础结构体定义（必须与emulator.h完全一致） */
+struct msg { char data[20]; };
+struct pkt { int seqnum; int acknum; int checksum; char payload[20]; };
 
-/* 协议参数定义（移除注释以符合C90） */
-#define WINDOW_SIZE 8       /* Window size */
-#define MAX_SEQ 256         /* Sequence number range */
-#define TIMEOUT 16 0        /* Timeout value */
+/* 协议参数 */
+#define WINDOW_SIZE 8
+#define MAX_SEQ 256
+#define TIMEOUT 16.0
+#define BIDIRECTIONAL 0  /* 明确声明单向传输 */
 
-/* SR专用数据结构 */
-typedef struct {
-    struct pkt packet;      /* Data packet copy */
-    int acked;              /* ACK status */
-    double timestamp;       /* Send timestamp */
-} SendBufferSlot;
+/* 仿真器函数声明 */
+extern int corrupt(struct pkt);
+extern void starttimer(int, double);
+extern void stoptimer(int);
+extern void tolayer3(int, struct pkt);
+extern void tolayer5(int, char[20]);
+extern double getsimtime(void);
 
-typedef struct {
-    struct pkt packet;      /* Received packet */
-    int received;           /* Receive status */
-} RecvBufferSlot;
-
-/* 函数声明 */
+/* 必须实现的函数 */
 void A_output(struct msg message);
 void A_input(struct pkt packet);
 void A_timerinterrupt(void);
@@ -30,8 +27,9 @@ void A_init(void);
 void B_input(struct pkt packet);
 void B_init(void);
 
-/* 工具函数 */
-int compute_checksum(struct pkt packet);
-void send_ack(int calling_entity, int ack_seq);
+/* 测试环境要求的空函数 */
+void B_output(struct msg message);
+void B_timerinterrupt(void);
 
 #endif
+/* 确保最后有空行 */
